@@ -5,8 +5,32 @@
 /**
  * DynamicArray
  *
- * This class provides functionality to dynamically manage an array`s
- * size, allowing elements to be added, removed, and accessed.
+ * Differences from a fixed-size array:
+ *
+ * 1. **Dynamic Sizing**:
+ *    - DynamicArray: Can grow or shrink in size as elements are added or
+ * removed.
+ *    - Fixed-size Array: Has a predetermined size that cannot be changed after
+ * creation.
+ *
+ * 2. **Memory Management**:
+ *    - DynamicArray: Allocates and deallocates memory as needed, providing
+ * flexibility.
+ *    - Fixed-size Array: Allocates a fixed amount of memory, potentially
+ * wasting space if not fully utilized.
+ *
+ * 3. **Element Addition**:
+ *    - DynamicArray: Supports adding elements beyond the initial capacity,
+ * resizing as needed.
+ *    - Fixed-size Array: Cannot accommodate more elements than its defined
+ * size.
+ *
+ * 4. **Performance**:
+ *    - DynamicArray: May incur overhead due to resizing operations, but is more
+ * versatile.
+ *    - Fixed-size Array: Generally faster for access and insertion when the
+ * size is known and fixed.
+ *
  */
 template <typename T> class DynamicArray {
 private:
@@ -18,9 +42,9 @@ private:
    * Resize the array to a new capacity.
    *
    * @complexity
-   * - Best: O(n)
    * - Worst: O(n)
    * - Average: O(n)
+   * - Best: O(n)
    */
   void resize(size_t new_capacity) {
     T *new_data = new T[new_capacity];
@@ -104,27 +128,27 @@ public:
    * (Linear) Search for a value in the array.
    *
    * @complexity
-   * - Best: O(1) (If the value is at the first index)
    * - Worst: O(n) (If the value is at the last index or not present)
    * - Average: O(n)
+   * - Best: O(1) (If the value is at the first index)
    */
-  size_t find(const T &value) const {
+  int find(const T &value) const {
     for (size_t i = 0; i < size; ++i) {
       if (data[i] == value) {
         return i;
       }
     }
 
-    return static_cast<size_t>(-1);
+    return -1;
   }
 
   /**
    * Insert an element at a specific index.
    *
    * @complexity
-   * - Best: O(1)
    * - Worst: O(n)
    * - Average: O(n)
+   * - Best: O(1)
    */
   void insert(size_t index, const T &value) {
     if (index > size) {
@@ -135,10 +159,8 @@ public:
       resize(capacity * 2);
     }
 
-    if (index < size) {
-      for (size_t i = size; i > index; --i) {
-        data[i] = std::move(data[i - 1]);
-      }
+    for (size_t i = size; i > index; --i) {
+      data[i] = std::move(data[i - 1]);
     }
 
     data[index] = value;
@@ -149,19 +171,17 @@ public:
    * Remove an element at a specific index.
    *
    * @complexity
-   * - Best: O(1)
    * - Worst: O(n)
    * - Average: O(n)
+   * - Best: O(1)
    */
   void remove(size_t index) {
     if (index >= size) {
       throw std::out_of_range("Index out of range");
     }
 
-    if (index < size - 1) {
-      for (size_t i = index; i < size - 1; ++i) {
-        data[i] = std::move(data[i + 1]);
-      }
+    for (size_t i = index; i < size - 1; ++i) {
+      data[i] = std::move(data[i + 1]);
     }
 
     --size;
